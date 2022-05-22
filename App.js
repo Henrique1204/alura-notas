@@ -12,7 +12,7 @@ import {
 
 import NotaEditor from "./src/componentes/NotaEditor";
 import { Nota } from "./src/componentes/Nota";
-import { criaTabela } from "./src/servicos/Notas";
+import { buscarNotas, criaTabela } from "./src/servicos/Notas";
 
 export default function App() {
   const [notas, setNotas] = React.useState([]);
@@ -30,7 +30,9 @@ export default function App() {
 
   const mostrarNotas = async () => {
     try {
-      setNotas([]);
+      const todasAsNotas = await buscarNotas();
+
+      setNotas(todasAsNotas);
     } catch ({ message }) {
       Alert.alert(`Erro ao mostrar notas: ${message}`);
     }
@@ -38,9 +40,6 @@ export default function App() {
 
   React.useEffect(() => {
     criaTabela();
-  }, []);
-
-  React.useEffect(() => {
     mostrarNotas();
   }, []);
 
@@ -50,8 +49,8 @@ export default function App() {
 
       <FlatList
         data={notas}
-        keyExtractor={([id]) => id}
-        renderItem={({ item: [_, conteudo] }) => <Nota>{conteudo}</Nota>}
+        keyExtractor={({ id }) => id}
+        renderItem={({ item }) => <Nota {...item} />}
       />
 
       <NotaEditor atualizarNotas={mostrarNotas} />

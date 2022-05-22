@@ -50,6 +50,14 @@ export default function NotaEditor({ atualizarNotas }) {
   //   }
   // };
 
+  const fecharModal = () => {
+    setModalVisivel(false);
+
+    setTitulo("");
+    setCategoria("Pessoal");
+    setTexto("");
+  };
+
   const salvarNota = async () => {
     try {
       const novaNota = {
@@ -57,13 +65,12 @@ export default function NotaEditor({ atualizarNotas }) {
         categoria,
         texto,
       };
-  
+
       const feedback = await adicionarNota(novaNota);
 
       Alert.alert(feedback);
 
-      setModalVisivel(false);
-      setTexto("");
+      fecharModal();
 
       await atualizarNotas();
     } catch ({ message }) {
@@ -95,6 +102,16 @@ export default function NotaEditor({ atualizarNotas }) {
                 value={titulo}
               />
 
+              <Text style={estilos.modalSubTitulo}>Categoria da nota</Text>
+
+              <View style={estilos.modalPicker}>
+                <Picker selectedValue={categoria} onValueChange={setCategoria}>
+                  <Picker.Item label="Pessoal" value="Pessoal" />
+                  <Picker.Item label="Trabalho" value="Trabalho" />
+                  <Picker.Item label="Outros" value="Outros" />
+                </Picker>
+              </View>
+
               <Text style={estilos.modalSubTitulo}>Conteúdo da nota</Text>
 
               <TextInput
@@ -106,16 +123,6 @@ export default function NotaEditor({ atualizarNotas }) {
                 value={texto}
               />
 
-              <Text style={estilos.modalSubTitulo}>Categoria da nota</Text>
-
-              <View style={estilos.modalPicker}>
-                <Picker selectedValue={categoria} onValueChange={setCategoria}>
-                  <Picker.Item label="Pessoal" value="Pessoal" />
-                  <Picker.Item label="Trabalho" value="Trabalho" />
-                  <Picker.Item label="Outros" value="Outros" />
-                </Picker>
-              </View>
-
               <View style={estilos.modalBotoes}>
                 <TouchableOpacity
                   style={estilos.modalBotaoSalvar}
@@ -126,9 +133,7 @@ export default function NotaEditor({ atualizarNotas }) {
 
                 <TouchableOpacity
                   style={estilos.modalBotaoCancelar}
-                  onPress={() => {
-                    setModalVisivel(false);
-                  }}
+                  onPress={fecharModal}
                 >
                   <Text style={estilos.modalBotaoTexto}>Cancelar</Text>
                 </TouchableOpacity>
