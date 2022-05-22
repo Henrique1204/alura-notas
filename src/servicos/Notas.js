@@ -30,13 +30,32 @@ export const adicionarNota = (nota) => {
   });
 };
 
-export const buscarNotas = (nota) => {
+export const atualizarNota = (nota) => {
   return new Promise((resolve, eject) => {
     db.transaction(
       (transaction) => {
-        transaction.executeSql("SELECT * FROM Notas;",
-          [],
-          (_, resolves) => resolve(resolves.rows._array)
+        transaction.executeSql(
+          `
+            UPDATE Notas SET titulo = ?, categoria = ?, texto = ?
+            WHERE id = ?;
+          `,
+          [nota.titulo, nota.categoria, nota.texto, nota.id],
+          () => resolve("Nota editada com sucesso!")
+        );
+      },
+      (erro) => {
+        eject(erro);
+      }
+    );
+  });
+};
+
+export const buscarNotas = () => {
+  return new Promise((resolve, eject) => {
+    db.transaction(
+      (transaction) => {
+        transaction.executeSql("SELECT * FROM Notas;", [], (_, resolves) =>
+          resolve(resolves.rows._array)
         );
       },
       (erro) => {

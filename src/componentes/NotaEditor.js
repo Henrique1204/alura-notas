@@ -13,16 +13,20 @@ import {
 
 import { Picker } from "@react-native-picker/picker";
 
-import { adicionarNota } from "../servicos/Notas";
+import { adicionarNota, atualizarNota } from "../servicos/Notas";
 
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function NotaEditor({ atualizarNotas }) {
+export default function NotaEditor({
+  atualizarNotas: atualizarListagemDeNotas,
+  modalVisivel,
+  setModalVisivel,
+  notaSelecionada,
+  limparNotaSelecionada,
+}) {
   const [titulo, setTitulo] = useState("");
   const [categoria, setCategoria] = useState("Pessoal");
   const [texto, setTexto] = useState("");
-
-  const [modalVisivel, setModalVisivel] = useState(false);
 
   // const gerarId = async () => {
   //   const todasAsChaves = await AsyncStorage.getAllKeys();
@@ -50,12 +54,23 @@ export default function NotaEditor({ atualizarNotas }) {
   //   }
   // };
 
+  const abrirModal = () => {
+    setModalVisivel(true);
+
+    preencherModal(notaSelecionada);
+  };
+
+  const preencherModal = (nota) => {
+    setTitulo(nota?.titulo || "");
+    setCategoria(nota?.categoria || "Pessoal");
+    setTexto(nota?.texto || "");
+  };
+
   const fecharModal = () => {
     setModalVisivel(false);
 
-    setTitulo("");
-    setCategoria("Pessoal");
-    setTexto("");
+    preencherModal();
+    limparNotaSelecionada();
   };
 
   const salvarNota = async () => {
@@ -66,17 +81,25 @@ export default function NotaEditor({ atualizarNotas }) {
         texto,
       };
 
-      const feedback = await adicionarNota(novaNota);
-
-      Alert.alert(feedback);
+      if (!notaSelecionada) {
+        const feedback = await adicionarNota(novaNota);
+        Alert.alert(feedback);
+      } else {
+        const feedback = await atualizarNota({ ...novaNota, id: notaSelecionada.id });
+        Alert.alert(feedback);
+      }
 
       fecharModal();
 
-      await atualizarNotas();
+      await atualizarListagemDeNotas();
     } catch ({ message }) {
       Alert.alert(`Ocorreu algum erro ao salvar nota: ${message}`);
     }
   };
+
+  React.useEffect(() => {
+    if (notaSelecionada) abrirModal();
+  }, [notaSelecionada]);
 
   return (
     <>
@@ -143,12 +166,7 @@ export default function NotaEditor({ atualizarNotas }) {
         </View>
       </Modal>
 
-      <TouchableOpacity
-        onPress={() => {
-          setModalVisivel(true);
-        }}
-        style={estilos.adicionarMemo}
-      >
+      <TouchableOpacity onPress={abrirModal} style={estilos.adicionarMemo}>
         <Text style={estilos.adicionarMemoTexto}>+</Text>
       </TouchableOpacity>
     </>

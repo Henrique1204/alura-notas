@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Alert,
   FlatList,
+  TouchableOpacity,
 } from "react-native";
 
 // import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,6 +17,8 @@ import { buscarNotas, criaTabela } from "./src/servicos/Notas";
 
 export default function App() {
   const [notas, setNotas] = React.useState([]);
+  const [notaSelecionada, setNotaSelecionada] = React.useState();
+  const [modalVisivel, setModalVisivel] = React.useState(false);
 
   // const mostrarNotas = async () => {
   //   try {
@@ -50,10 +53,20 @@ export default function App() {
       <FlatList
         data={notas}
         keyExtractor={({ id }) => id}
-        renderItem={({ item }) => <Nota {...item} />}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => setNotaSelecionada(item)}>
+            <Nota {...item} />
+          </TouchableOpacity>
+        )}
       />
 
-      <NotaEditor atualizarNotas={mostrarNotas} />
+      <NotaEditor
+        atualizarNotas={mostrarNotas}
+        modalVisivel={modalVisivel}
+        setModalVisivel={setModalVisivel}
+        limparNotaSelecionada={() => setNotaSelecionada(undefined)}
+        notaSelecionada={notaSelecionada}
+      />
     </SafeAreaView>
   );
 }
