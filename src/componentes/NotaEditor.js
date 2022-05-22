@@ -13,7 +13,7 @@ import {
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function NotaEditor() {
+export default function NotaEditor({ atualizarNotas }) {
   const [texto, setTexto] = useState("");
   const [modalVisivel, setModalVisivel] = useState(false);
 
@@ -21,16 +21,6 @@ export default function NotaEditor() {
     const todasAsChaves = await AsyncStorage.getAllKeys();
 
     return (todasAsChaves.length + 1).toString();
-  };
-
-  const mostrarNota = async (key) => {
-    try {
-      const nota = await AsyncStorage.getItem(key);
-
-      Alert.alert(nota);
-    } catch ({ message }) {
-      Alert.alert(`Ocorreu algum erro ao mostrar nota: ${message}`);
-    }
   };
 
   const salvarNota = async () => {
@@ -44,7 +34,10 @@ export default function NotaEditor() {
 
       await AsyncStorage.setItem(umaNota.id, umaNota.texto);
 
-      await mostrarNota(id);
+      setModalVisivel(false);
+      setTexto('');
+
+      await atualizarNotas();
     } catch ({ message }) {
       Alert.alert(`Ocorreu algum erro ao salvar nota: ${message}`);
     }
