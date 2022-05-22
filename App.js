@@ -8,24 +8,37 @@ import {
   FlatList,
 } from "react-native";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import NotaEditor from "./src/componentes/NotaEditor";
 import { Nota } from "./src/componentes/Nota";
+import { criaTabela } from "./src/servicos/Notas";
 
 export default function App() {
   const [notas, setNotas] = React.useState([]);
 
+  // const mostrarNotas = async () => {
+  //   try {
+  //     const todasAsChaves = await AsyncStorage.getAllKeys();
+  //     const todasAsNotas = await AsyncStorage.multiGet(todasAsChaves);
+
+  //     setNotas(todasAsNotas);
+  //   } catch ({ message }) {
+  //     Alert.alert(`Erro ao mostrar notas: ${message}`);
+  //   }
+  // };
+
   const mostrarNotas = async () => {
     try {
-      const todasAsChaves = await AsyncStorage.getAllKeys();
-      const todasAsNotas = await AsyncStorage.multiGet(todasAsChaves);
-
-      setNotas(todasAsNotas);
+      setNotas([]);
     } catch ({ message }) {
       Alert.alert(`Erro ao mostrar notas: ${message}`);
     }
   };
+
+  React.useEffect(() => {
+    criaTabela();
+  }, []);
 
   React.useEffect(() => {
     mostrarNotas();

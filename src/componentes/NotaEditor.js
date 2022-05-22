@@ -11,31 +11,42 @@ import {
   Alert,
 } from "react-native";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function NotaEditor({ atualizarNotas }) {
   const [texto, setTexto] = useState("");
   const [modalVisivel, setModalVisivel] = useState(false);
 
-  const gerarId = async () => {
-    const todasAsChaves = await AsyncStorage.getAllKeys();
+  // const gerarId = async () => {
+  //   const todasAsChaves = await AsyncStorage.getAllKeys();
 
-    return (todasAsChaves.length + 1).toString();
-  };
+  //   return (todasAsChaves.length + 1).toString();
+  // };
+
+  // const salvarNota = async () => {
+  //   try {
+  //     const id = await gerarId();
+
+  //     const umaNota = {
+  //       id,
+  //       texto,
+  //     };
+
+  //     await AsyncStorage.setItem(umaNota.id, umaNota.texto);
+
+  //     setModalVisivel(false);
+  //     setTexto("");
+
+  //     await atualizarNotas();
+  //   } catch ({ message }) {
+  //     Alert.alert(`Ocorreu algum erro ao salvar nota: ${message}`);
+  //   }
+  // };
 
   const salvarNota = async () => {
     try {
-      const id = await gerarId();
-
-      const umaNota = {
-        id,
-        texto,
-      };
-
-      await AsyncStorage.setItem(umaNota.id, umaNota.texto);
-
       setModalVisivel(false);
-      setTexto('');
+      setTexto("");
 
       await atualizarNotas();
     } catch ({ message }) {
