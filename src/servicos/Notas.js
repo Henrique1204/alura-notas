@@ -50,6 +50,22 @@ export const atualizarNota = (nota) => {
   });
 };
 
+export const deletarNota = (id) => {
+  return new Promise((resolve, eject) => {
+    db.transaction(
+      (transaction) => {
+        transaction.executeSql("DELETE FROM Notas WHERE id = ?;",
+          [id],
+          () => resolve("Nota removida com sucesso!")
+        );
+      },
+      (erro) => {
+        eject(erro);
+      }
+    );
+  });
+};
+
 export const buscarNotas = () => {
   return new Promise((resolve, eject) => {
     db.transaction(

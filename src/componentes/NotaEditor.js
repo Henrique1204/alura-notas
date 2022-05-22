@@ -13,7 +13,7 @@ import {
 
 import { Picker } from "@react-native-picker/picker";
 
-import { adicionarNota, atualizarNota } from "../servicos/Notas";
+import { adicionarNota, atualizarNota, deletarNota } from "../servicos/Notas";
 
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -85,9 +85,26 @@ export default function NotaEditor({
         const feedback = await adicionarNota(novaNota);
         Alert.alert(feedback);
       } else {
-        const feedback = await atualizarNota({ ...novaNota, id: notaSelecionada.id });
+        const feedback = await atualizarNota({
+          ...novaNota,
+          id: notaSelecionada.id,
+        });
         Alert.alert(feedback);
       }
+
+      fecharModal();
+
+      await atualizarListagemDeNotas();
+    } catch ({ message }) {
+      Alert.alert(`Ocorreu algum erro ao salvar nota: ${message}`);
+    }
+  };
+
+  const excluirNota = async () => {
+    try {
+      const feedback = await deletarNota(notaSelecionada.id);
+
+      Alert.alert(feedback);
 
       fecharModal();
 
@@ -153,6 +170,15 @@ export default function NotaEditor({
                 >
                   <Text style={estilos.modalBotaoTexto}>Salvar</Text>
                 </TouchableOpacity>
+
+                {!!notaSelecionada && (
+                  <TouchableOpacity
+                    style={estilos.modalBotaoDeletar}
+                    onPress={excluirNota}
+                  >
+                    <Text style={estilos.modalBotaoTexto}>Excluir</Text>
+                  </TouchableOpacity>
+                )}
 
                 <TouchableOpacity
                   style={estilos.modalBotaoCancelar}
