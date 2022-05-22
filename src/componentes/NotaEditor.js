@@ -17,26 +17,34 @@ export default function NotaEditor() {
   const [texto, setTexto] = useState("");
   const [modalVisivel, setModalVisivel] = useState(false);
 
-  const mostrarNota = async () => {
+  const gerarId = async () => {
+    const todasAsChaves = await AsyncStorage.getAllKeys();
+
+    return (todasAsChaves.length + 1).toString();
+  };
+
+  const mostrarNota = async (key) => {
     try {
-      const nota = await AsyncStorage.getItem('1');
+      const nota = await AsyncStorage.getItem(key);
 
       Alert.alert(nota);
-    } catch({ message }) {
+    } catch ({ message }) {
       Alert.alert(`Ocorreu algum erro ao mostrar nota: ${message}`);
     }
   };
 
   const salvarNota = async () => {
     try {
+      const id = await gerarId();
+
       const umaNota = {
-        id: "1",
+        id,
         texto,
       };
 
       await AsyncStorage.setItem(umaNota.id, umaNota.texto);
 
-      await mostrarNota();
+      await mostrarNota(id);
     } catch ({ message }) {
       Alert.alert(`Ocorreu algum erro ao salvar nota: ${message}`);
     }
