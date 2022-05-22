@@ -13,6 +13,8 @@ import {
 
 import { Picker } from "@react-native-picker/picker";
 
+import { adicionarNota } from "../servicos/Notas";
+
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function NotaEditor({ atualizarNotas }) {
@@ -50,6 +52,16 @@ export default function NotaEditor({ atualizarNotas }) {
 
   const salvarNota = async () => {
     try {
+      const novaNota = {
+        titulo,
+        categoria,
+        texto,
+      };
+  
+      const feedback = await adicionarNota(novaNota);
+
+      Alert.alert(feedback);
+
       setModalVisivel(false);
       setTexto("");
 
