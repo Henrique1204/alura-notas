@@ -1,20 +1,20 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-export function Nota({ children }) {
+export function Nota({ titulo, texto, categoria }) {
   const categorias = {
     Pessoal: "#FF924F",
     Outros: "#00911F",
     Trabalho: "#2F71EB",
   };
 
-  const style = styleFunction(categorias["Pessoal"]);
+  const estilos = styleFunction(categorias[categoria]);
 
   return (
-    <View style={style.cartao}>
-      <Text style={style.texto} numberOfLines={5}>
-        {children}
-      </Text>
+    <View style={estilos.cartao}>
+      <Text style={estilos.titulo}>{titulo}</Text>
+      <Text style={estilos.categoria}>{categoria}</Text>
+      <Text style={estilos.texto} numberOfLines={5}>{texto}</Text>
     </View>
   );
 }

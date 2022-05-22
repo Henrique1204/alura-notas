@@ -11,10 +11,15 @@ import {
   Alert,
 } from "react-native";
 
+import { Picker } from "@react-native-picker/picker";
+
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function NotaEditor({ atualizarNotas }) {
+  const [titulo, setTitulo] = useState("");
+  const [categoria, setCategoria] = useState("Pessoal");
   const [texto, setTexto] = useState("");
+
   const [modalVisivel, setModalVisivel] = useState(false);
 
   // const gerarId = async () => {
@@ -69,16 +74,35 @@ export default function NotaEditor({ atualizarNotas }) {
             <View style={estilos.modal}>
               <Text style={estilos.modalTitulo}>Criar nota</Text>
 
+              <Text style={estilos.modalSubTitulo}>Título da nota</Text>
+
+              <TextInput
+                style={estilos.modalInput}
+                onChangeText={setTitulo}
+                placeholder="Digite aqui o título da nota"
+                value={titulo}
+              />
+
               <Text style={estilos.modalSubTitulo}>Conteúdo da nota</Text>
 
               <TextInput
                 style={estilos.modalInput}
                 multiline={true}
                 numberOfLines={3}
-                onChangeText={(novoTexto) => setTexto(novoTexto)}
+                onChangeText={setTexto}
                 placeholder="Digite aqui seu lembrete"
                 value={texto}
               />
+
+              <Text style={estilos.modalSubTitulo}>Categoria da nota</Text>
+
+              <View style={estilos.modalPicker}>
+                <Picker selectedValue={categoria} onValueChange={setCategoria}>
+                  <Picker.Item label="Pessoal" value="Pessoal" />
+                  <Picker.Item label="Trabalho" value="Trabalho" />
+                  <Picker.Item label="Outros" value="Outros" />
+                </Picker>
+              </View>
 
               <View style={estilos.modalBotoes}>
                 <TouchableOpacity
